@@ -1,4 +1,4 @@
-import { bagImg, searchImg } from '../utils'; // Removi o 'appleImg' pois não vamos usar
+import { bagImg, searchImg, pslogoImg } from '../utils'; // 1. Adicionamos pslogoImg aqui
 import { navLists } from '../constants';
 
 const Navbar = () => {
@@ -6,9 +6,14 @@ const Navbar = () => {
     <header className="w-full py-5 sm:px-10 px-5 flex justify-between items-center">
       <nav className="flex w-full screen-max-width">
         
-        {/* MUDANÇA: Trocamos a logo da Apple pelo nome da Loja */}
-        <div className="text-gray-100 font-bold text-xl cursor-pointer hover:text-white transition-all">
-          PS IPHONES
+        {/* 2. MUDANÇA: Trocamos o texto pela Imagem da Logo */}
+        <div className="cursor-pointer hover:opacity-80 transition-all flex items-center">
+             <img 
+               src={pslogoImg} 
+               alt="PS IPHONES" 
+               width={100} // Ajuste esse tamanho se ficar muito grande ou pequeno
+               className="object-contain" 
+             />
         </div>
 
         <div className="flex flex-1 justify-center max-sm:hidden">

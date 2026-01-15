@@ -11,6 +11,9 @@ import highlightFourthmv from "/assets/videos/hightlight-fourth.mp4";
 import exploremv from "/assets/videos/explore.mp4";
 import framemv from "/assets/videos/frame.mp4";
 
+// --- MUDANÇA 1: Importando a logo ---
+import pslogo from "/assets/images/pslogo.png";
+
 import apple from "/assets/images/apple.svg";
 import search from "/assets/images/search.svg";
 import bag from "/assets/images/bag.svg";
@@ -37,6 +40,9 @@ export const highlightThirdVideo = highlightThirdmv;
 export const highlightFourthVideo = highlightFourthmv;
 export const exploreVideo = exploremv;
 export const frameVideo = framemv;
+
+// --- MUDANÇA 2: Exportando a logo para usar no site ---
+export const pslogoImg = pslogo;
 
 export const appleImg = apple;
 export const searchImg = search;
