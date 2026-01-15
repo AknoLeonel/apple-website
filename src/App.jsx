@@ -6,7 +6,7 @@ import Features from './components/Features';
 import HowItWorks from './components/HowItWorks';
 import Footer from './components/Footer';
 
-import * as Sentry from '@sentry/react';
+// REMOVIDO: import * as Sentry from '@sentry/react';
 
 const App = () => {
   return (
@@ -22,4 +22,5 @@ const App = () => {
   )
 }
 
-export default Sentry.withProfiler(App);
+// CORREÇÃO: Removemos o 'Sentry.withProfiler' e exportamos apenas o App
+export default App;
