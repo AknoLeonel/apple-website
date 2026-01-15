@@ -11,7 +11,8 @@ import React, { useEffect, useRef } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
 
 function Model(props) {
-  const { nodes, materials } = useGLTF("/models/scene.glb");
+  // CORREÇÃO 1: Adicionamos /apple-website antes do caminho
+  const { nodes, materials } = useGLTF("/apple-website/models/scene.glb");
 
   const texture = useTexture(props.item.img);
 
@@ -258,4 +259,5 @@ function Model(props) {
 
 export default Model;
 
-useGLTF.preload("/models/scene.glb");
+// CORREÇÃO 2: Também corrigimos o preload
+useGLTF.preload("/apple-website/models/scene.glb");

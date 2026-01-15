@@ -18,7 +18,8 @@ const Hero = () => {
     window.addEventListener('resize', handleVideoSrcSet);
 
     return () => {
-      window.removeEventListener('reisze', handleVideoSrcSet)
+      // CORREÇÃO: Estava escrito 'reisze' errado no original
+      window.removeEventListener('resize', handleVideoSrcSet)
     }
   }, [])
 
@@ -30,7 +31,8 @@ const Hero = () => {
   return (
     <section className="w-full nav-height bg-black relative">
       <div className="h-5/6 w-full flex-center flex-col">
-        <p id="hero" className="hero-title">iPhone 15 Pro</p>
+        {/* MUDANÇA 1: Nome da Loja */}
+        <p id="hero" className="hero-title">PS IPHONES</p>
         <div className="md:w-10/12 w-9/12">
           <video className="pointer-events-none" autoPlay muted playsInline={true} key={videoSrc}>
             <source src={videoSrc} type="video/mp4" />
@@ -42,8 +44,17 @@ const Hero = () => {
         id="cta"
         className="flex flex-col items-center opacity-0 translate-y-20"
       >
-        <a href="#highlights" className="btn">Buy</a>
-        <p className="font-normal text-xl">From $199/month or $999</p>
+        {/* MUDANÇA 2: Link do WhatsApp (Não esqueça de colocar seu número real) */}
+        <a 
+          href="https://wa.me/5500000000000?text=Olá,%20vim%20pelo%20site%20da%20PS%20IPHONES!" 
+          target="_blank" 
+          rel="noreferrer"
+          className="btn"
+        >
+          Comprar no WhatsApp
+        </a>
+        {/* MUDANÇA 3: Slogan de Venda */}
+        <p className="font-normal text-xl">Parcelamento em até 18x</p>
       </div>
     </section>
   )
