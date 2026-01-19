@@ -24,7 +24,7 @@ const Highlights = () => {
               <img src={watchImg} alt="watch" className="ml-2" />
             </p>
             {/* MUDANÇA 3: Link funcional para WhatsApp */}
-            <a href="https://wa.me/55SEUNUMERO" target="_blank" rel="noreferrer" className="link">
+            <a href="https://wa.me/5577999828813?text=Ol%C3%A1%20gostaria%20de%20fazer%20meu%20or%C3%A7amento!" target="_blank" rel="noreferrer" className="link">
               Fale com a gente
               <img src={rightImg} alt="right" className="ml-2" />
             </a>

@@ -19,7 +19,7 @@ const App = () => {
 
       {/* --- BOTÃO FLUTUANTE DO WHATSAPP --- */}
       <a 
-        href="https://wa.me/5500000000000?text=Olá, vim pelo site da PS IPHONES!"
+        href="https://wa.me/5577999828813?text=Ol%C3%A1%20gostaria%20de%20fazer%20meu%20or%C3%A7amento!"
         target="_blank"
         rel="noreferrer"
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-[#25D366] hover:bg-[#1da851] text-white py-3 px-5 rounded-full shadow-lg transition-all hover:scale-110 animate-bounce-slow cursor-pointer font-bold"

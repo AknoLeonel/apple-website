@@ -46,7 +46,7 @@ const Hero = () => {
       >
         {/* MUDANÇA 2: Link do WhatsApp (Não esqueça de colocar seu número real) */}
         <a 
-          href="https://wa.me/5500000000000?text=Olá,%20vim%20pelo%20site%20da%20PS%20IPHONES!" 
+          href="https://wa.me/5577999828813?text=Ol%C3%A1%20gostaria%20de%20fazer%20meu%20or%C3%A7amento!" 
           target="_blank" 
           rel="noreferrer"
           className="btn"

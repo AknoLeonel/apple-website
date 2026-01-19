@@ -245,7 +245,7 @@ const Model = () => {
                     <p className="text-lg font-bold text-white mb-5">{phone.price}</p>
                     
                     <a 
-                        href={`https://wa.me/5500000000000?text=Olá, vi o ${phone.name} por ${phone.price} no site e tenho interesse!`} 
+                        href={`https://wa.me/5577999828813?text=Ol%C3%A1%20gostaria%20de%20fazer%20meu%20or%C3%A7amento!, vi o ${phone.name} por ${phone.price} no site e tenho interesse!`} 
                         target="_blank"
                         rel="noreferrer"
                         onMouseDown={(e) => e.stopPropagation()} 
