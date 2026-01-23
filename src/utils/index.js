@@ -12,7 +12,7 @@ import exploremv from "/assets/videos/explore.mp4";
 import framemv from "/assets/videos/frame.mp4";
 
 // --- MUDANÇA 1: Importando a logo ---
-import pslogo from "/assets/images/pslogo.png";
+import pslogo from "/assets/images/pslogo.webp";
 
 import apple from "/assets/images/apple.svg";
 import search from "/assets/images/search.svg";
