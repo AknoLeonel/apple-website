@@ -38,7 +38,9 @@
         }
       };
       gtag('event', 'conversion', {
-          'send_to': 'AW-17888906026/IDrdCNfP7e0bEKqWjNJC',
+          'send_to': 'AW-17888906026/BtT5CPK57u0bEKqWjNJC',
+          'value': 1.0,
+          'currency': 'BRL',
           'event_callback': callback
       });
       return false;
@@ -53,14 +55,13 @@
 
     <script>
       document.addEventListener('click', function(event) {
-        // Procura o elemento <a> mais próximo do clique (caso clique num ícone dentro do link)
+        // Encontra o link clicado (mesmo se clicar num ícone dentro dele)
         var link = event.target.closest('a');
         
-        // Verifica se é um link e se leva para o WhatsApp
+        // Verifica se é um link de WhatsApp
         if (link && (link.href.includes('api.whatsapp.com') || link.href.includes('wa.me'))) {
-          // Previne a abertura imediata para dar tempo do Google registrar
+          // Avisa o Google Ads antes de sair do site
           event.preventDefault(); 
-          // Chama a função de conversão do Google (que fará o redirecionamento)
           gtag_report_conversion(link.href);
         }
       });
