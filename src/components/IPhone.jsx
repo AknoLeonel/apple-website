@@ -7,31 +7,34 @@ Title: Apple iPhone 15 Pro Max Black
 */
 
 import * as THREE from 'three';
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useGLTF, useTexture } from "@react-three/drei";
 
 function Model(props) {
-  // CORREÇÃO 1: Adicionamos /apple-website antes do caminho
+  // Configuração do caminho do modelo 3D
   const { nodes, materials } = useGLTF("/apple-website/models/scene.glb");
-
+  
+  // Carregamento da textura (Tela do iPhone)
   const texture = useTexture(props.item.img);
 
-    useEffect(() => {
-      Object.entries(materials).map((material) => {
-        // these are the material names that can't be changed color
-        if (
-          material[0] !== "zFdeDaGNRwzccye" &&
-          material[0] !== "ujsvqBWRMnqdwPx" &&
-          material[0] !== "hUlRcbieVuIiOXG" &&
-          material[0] !== "jlzuBkUzuJqgiAK" &&
-          material[0] !== "xNrofRCqOXXHVZt"
-        ) {
-          material[1].color = new THREE.Color(props.item.color[0]);
-        }
-        material[1].needsUpdate = true;
-      });
-    }, [materials, props.item]);
-  
+  useEffect(() => {
+    // Otimização: Loop para aplicar a cor do modelo escolhido
+    Object.entries(materials).map((material) => {
+      // Lista de materiais que NÃO devem mudar de cor (lentes, flash, parafusos, etc)
+      if (
+        material[0] !== "zFdeDaGNRwzccye" &&
+        material[0] !== "ujsvqBWRMnqdwPx" &&
+        material[0] !== "hUlRcbieVuIiOXG" &&
+        material[0] !== "jlzuBkUzuJqgiAK" &&
+        material[0] !== "xNrofRCqOXXHVZt"
+      ) {
+        // Aplica a cor selecionada no funil de vendas
+        material[1].color = new THREE.Color(props.item.color[0]);
+      }
+      material[1].needsUpdate = true;
+    });
+  }, [materials, props.item]);
+
   return (
     <group {...props} dispose={null}>
       <mesh
@@ -139,6 +142,7 @@ function Model(props) {
         material={materials.sxNzrmuTqVeaXdg}
         scale={0.01}
       />
+      {/* TELA DO IPHONE - Aplica a Textura */}
       <mesh
         castShadow
         receiveShadow
@@ -257,7 +261,8 @@ function Model(props) {
   );
 }
 
-export default Model;
+// PERFORMANCE: React.memo previne re-renderizações desnecessárias ao girar a câmera
+export default React.memo(Model);
 
-// CORREÇÃO 2: Também corrigimos o preload
+// Pré-carregamento do modelo para evitar delays
 useGLTF.preload("/apple-website/models/scene.glb");

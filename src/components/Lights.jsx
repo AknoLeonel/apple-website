@@ -1,18 +1,20 @@
 import { Environment, Lightformer } from "@react-three/drei";
+import { memo } from "react";
 
 const Lights = () => {
   return (
-    // group different lights and lightformers. We can use group to organize lights, cameras, meshes, and other objects in the scene.
+    // group organiza a cena. O nome 'lights' ajuda em debuggers 3D.
     <group name="lights">
       {/**
-       * @description Environment is used to create a background environment for the scene
-       * https://github.com/pmndrs/drei?tab=readme-ov-file#environment
+       * Otimização de Performance:
+       * frames={1} -> Renderiza o ambiente apenas no primeiro quadro e faz cache.
+       * Isso economiza MUITA GPU, essencial para mobile.
+       * resolution={256} -> Textura 256x256 é suficiente para reflexos difusos e leve para carregar.
        */}
-      <Environment resolution={256}>
+      <Environment resolution={256} frames={1}>
         <group>
-          {/**
-           * @description Lightformer used to create custom lights with various shapes and properties in a 3D scene.
-           * https://github.com/pmndrs/drei?tab=readme-ov-file#lightformer
+          {/** * Lightformers criam aqueles reflexos "retangulares" bonitos 
+           * que vemos em comerciais de carros e celulares (Studio Lighting).
            */}
           <Lightformer
             form="rect"
@@ -39,16 +41,15 @@ const Lights = () => {
       </Environment>
 
       {/**
-       * @description spotLight is used to create a light source positioned at a specific point
-       * in the scene that emits light in a specific direction.
-       * https://threejs.org/docs/#api/en/lights/SpotLight
+       * Spotlights: Luzes direcionais para destacar o objeto principal.
+       * Ajudam a criar sombras e profundidade no modelo 3D.
        */}
       <spotLight
         position={[-2, 10, 5]}
         angle={0.15}
-        penumbra={1} // the penumbra is the soft edge of a shadow cast by a point light
-        decay={0} // the amount the light dims as it moves away from the source
-        intensity={Math.PI * 0.2} // the light intensity
+        penumbra={1} // Borda suave da sombra
+        decay={0} // Luz não enfraquece com a distância (estilo estúdio infinito)
+        intensity={Math.PI * 0.2}
         color={"#f8f9fa"}
       />
       <spotLight
@@ -70,4 +71,5 @@ const Lights = () => {
   );
 };
 
-export default Lights;
+// React.memo previne re-renderizações desnecessárias das luzes
+export default memo(Lights);

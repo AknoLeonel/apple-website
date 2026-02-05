@@ -2,10 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --blue-primary: #2997FF;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -15,7 +23,9 @@ body {
   height: 100%;
   background: #000;
   border-color: #3b3b3b;
-  user-select: none;
+  /* UX: Permitir seleção de texto ajuda o cliente a copiar endereço/modelo */
+  user-select: text; 
+  -webkit-font-smoothing: antialiased;
 }
 
 canvas {
@@ -39,19 +49,7 @@ canvas {
   }
 
   .btn {
-    @apply px-5 py-2 rounded-3xl bg-blue my-5 hover:bg-transparent border border-transparent hover:border hover:text-blue hover:border-blue
-  }
-
-  .color-container {
-    @apply flex items-center justify-center px-4 py-4 rounded-full bg-gray-300 backdrop-blur
-  }
-
-  .size-btn-container {
-    @apply flex items-center justify-center p-1 rounded-full bg-gray-300 backdrop-blur ml-3 gap-1
-  }
-
-  .size-btn {
-    @apply w-10 h-10 text-sm flex justify-center items-center bg-white text-black rounded-full transition-all
+    @apply px-5 py-2 rounded-3xl bg-blue my-5 hover:bg-white hover:text-black border border-transparent transition-all duration-300 font-semibold
   }
 
   .common-padding {
@@ -79,11 +77,11 @@ canvas {
   }
 
   .link {
-    @apply text-blue hover:underline cursor-pointer flex items-center text-xl opacity-0 translate-y-20
+    @apply text-blue hover:text-white hover:underline cursor-pointer flex items-center text-xl opacity-0 translate-y-20 transition-colors
   }
 
   .control-btn {
-    @apply ml-4 p-4 rounded-full bg-gray-300 backdrop-blur flex-center
+    @apply ml-4 p-4 rounded-full bg-gray-300 backdrop-blur flex-center hover:bg-white transition-colors
   }
 
   .hero-title {
@@ -117,8 +115,22 @@ canvas {
   .video-carousel_container {
     @apply relative sm:w-[70vw] w-[88vw] md:h-[70vh] sm:h-[50vh] h-[35vh]
   }
+  
+  .video-carousel_card {
+    @apply relative flex-shrink-0
+  }
 
   .g_fadeIn {
     @apply opacity-0 translate-y-[100px]
+  }
+
+  /* --- UTILITÁRIO GLOBAL PARA ESCONDER SCROLLBAR --- */
+  /* Use className="scrollbar-hide" em qualquer div com scroll */
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  .scrollbar-hide {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
   }
 }
