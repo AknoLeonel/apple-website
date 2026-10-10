@@ -1,143 +1,160 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
+import { store, whatsappLink } from '../constants';
+import PhoneArt from './PhoneArt';
+import { WhatsAppIcon } from './Icons';
+
+const paymentOptions = ['Pix (à vista com desconto)', `Cartão de crédito (até ${store.maxInstallments}x)`, 'Entrada + parcelas', 'Usado na troca + diferença'];
 
 const CheckoutModal = () => {
-  const { cart, inventory, location, isCartOpen, toggleCart, removeFromCart, formatMoney, products } = useContext(ShopContext);
+  const { cart, products, location, isCartOpen, toggleCart, changeQty, removeFromCart, clearCart, formatMoney } = useContext(ShopContext);
   const [customerName, setCustomerName] = useState('');
-  
-  // Mudamos de "Forma de Pagamento" para "Intenção de Pagamento"
-  const [paymentMethod, setPaymentMethod] = useState('Pix (Preferencial)');
+  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0]);
+  const [nameError, setNameError] = useState(false);
+
+  // Fecha com Esc e trava o scroll da página enquanto aberto
+  useEffect(() => {
+    if (!isCartOpen) return;
+    const onKey = (e) => e.key === 'Escape' && toggleCart();
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [isCartOpen, toggleCart]);
 
   if (!isCartOpen) return null;
 
-  const cartItems = cart.map(item => {
-    const product = products.find(p => p.id === item.id);
-    const price = inventory[location][item.id].price;
-    return { ...item, ...product, price };
-  });
-
-  const total = cartItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const storeLabel = store.locations.find((l) => l.id === location)?.label;
+  const cartItems = cart
+    .map((item) => ({ ...item, ...products.find((p) => p.id === item.id) }))
+    .filter((item) => item.model);
+  const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const handleCheckout = () => {
-    if (!customerName.trim()) return alert("Por favor, digite seu nome para o orçamento!");
-    if (cartItems.length === 0) return alert("Selecione pelo menos um aparelho.");
+    if (!customerName.trim()) {
+      setNameError(true);
+      return;
+    }
 
-    // MENSAGEM FOI REESCRITA PARA "ORÇAMENTO/ENCOMENDA"
-    let msg = `*SOLICITAÇÃO DE RESERVA/ORÇAMENTO*\n`;
+    let msg = `*PEDIDO PELO SITE — ${store.name}*\n`;
     msg += `----------------------------------\n`;
-    msg += `👤 *Cliente:* ${customerName}\n`;
-    msg += `📍 *Cidade:* ${location.toUpperCase()}\n`;
-    msg += `💰 *Pref. Pagamento:* ${paymentMethod}\n`;
-    msg += `🚚 *Ciente do Prazo:* Sim (Até 7 dias úteis)\n\n`;
-    msg += `*ITENS DESEJADOS:*\n`;
-
-    cartItems.forEach(item => {
-        msg += `📱 ${item.qty}x ${item.name} - ${item.specs}\n`;
-        msg += `   (Valor ref: ${formatMoney(item.price)})\n`;
+    msg += `👤 *Cliente:* ${customerName.trim()}\n`;
+    msg += `📍 *Loja:* ${storeLabel}\n`;
+    msg += `💰 *Pagamento:* ${paymentMethod}\n\n`;
+    msg += `*ITENS (novos e lacrados):*\n`;
+    cartItems.forEach((item) => {
+      msg += `📱 ${item.qty}x ${item.model} ${item.storage} — ${formatMoney(item.price)}\n`;
     });
-
-    msg += `\n*VALOR TOTAL ESTIMADO: ${formatMoney(total)}*\n`;
+    msg += `\n*TOTAL: ${formatMoney(total)}*\n`;
     msg += `----------------------------------\n`;
-    msg += `Gostaria de confirmar a disponibilidade e agendar a entrega.`;
+    msg += `Quero confirmar cor e disponibilidade.`;
 
-    const phone = "5577999828813"; 
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    
-    window.open(url, '_blank');
+    const url = whatsappLink(msg);
+    if (typeof window.gtag_report_conversion === 'function') window.gtag_report_conversion();
+    window.open(url, '_blank', 'noopener');
+    clearCart();
     toggleCart();
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
-        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onClick={toggleCart}></div>
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={toggleCart} />
 
-        <div className="relative bg-[#101010] w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-white/10 shadow-2xl p-6 flex flex-col max-h-[90vh] animate-fade-up">
-            
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-xl font-bold text-white">Lista de Interesse</h2>
-                    <p className="text-xs text-gray-500">Solicitação de orçamento</p>
-                </div>
-                <button onClick={toggleCart} className="p-2 text-gray-400 hover:text-white bg-white/5 rounded-full">✕</button>
-            </div>
-
-            <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg mb-4">
-                <p className="text-amber-500 text-xs font-bold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg>
-                    Atenção ao Prazo
-                </p>
-                <p className="text-gray-400 text-[10px] mt-1">
-                    Trabalhamos com encomendas. A entrega é realizada em até <strong>7 dias úteis</strong> após a confirmação.
-                </p>
-            </div>
-
-            <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2 custom-scrollbar">
-                {cartItems.length === 0 ? (
-                    <div className="text-center py-10 text-gray-500">
-                        Sua lista está vazia.
-                    </div>
-                ) : (
-                    cartItems.map(item => (
-                        <div key={item.id} className="flex gap-4 p-3 bg-white/5 rounded-xl border border-white/5">
-                            <div className="w-14 h-14 bg-black rounded-lg p-1 flex-shrink-0">
-                                <img src={item.image} className="w-full h-full object-contain" />
-                            </div>
-                            <div className="flex-1">
-                                <h4 className="text-sm font-bold text-white">{item.name}</h4>
-                                <div className="flex justify-between items-center mt-1">
-                                    <span className="text-xs text-blue-400 font-mono">
-                                        {formatMoney(item.price)}
-                                    </span>
-                                    <button onClick={() => removeFromCart(item.id)} className="text-xs text-red-500 hover:text-red-400">Remover</button>
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
-
-            {cartItems.length > 0 && (
-                <div className="space-y-3 pt-4 border-t border-white/10">
-                    <div>
-                        <label className="text-xs text-gray-500 uppercase font-bold ml-1">Seu Nome Completo</label>
-                        <input 
-                            type="text" 
-                            value={customerName}
-                            onChange={e => setCustomerName(e.target.value)}
-                            className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-blue-500 outline-none mt-1 text-sm"
-                            placeholder="Para identificarmos seu pedido"
-                        />
-                    </div>
-                    
-                    <div>
-                        <label className="text-xs text-gray-500 uppercase font-bold ml-1">Preferência de Pagamento</label>
-                        <select 
-                            value={paymentMethod}
-                            onChange={e => setPaymentMethod(e.target.value)}
-                            className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-blue-500 outline-none mt-1 text-sm cursor-pointer"
-                        >
-                            <option>Pix (Maior Desconto)</option>
-                            <option>Cartão de Crédito</option>
-                            <option>Entrada + Parcelas</option>
-                        </select>
-                    </div>
-
-                    <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-400 text-sm">Total Estimado:</span>
-                        <span className="text-xl font-bold text-white">{formatMoney(total)}</span>
-                    </div>
-
-                    <button 
-                        onClick={handleCheckout}
-                        className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-900/20 transition-all active:scale-95 flex items-center justify-center gap-2"
-                    >
-                        <span>Falar com Consultor</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg>
-                    </button>
-                    <p className="text-[10px] text-center text-gray-600">Ao clicar, você será redirecionado para o WhatsApp.</p>
-                </div>
-            )}
+      <div className="relative bg-[#121213] w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-white/10 shadow-2xl p-6 flex flex-col max-h-[92vh] animate-fade-up">
+        <div className="flex justify-between items-center mb-5">
+          <div>
+            <h2 id="cart-title" className="text-xl font-semibold text-white">Minha lista</h2>
+            <p className="text-xs text-gray-200">Loja de {storeLabel} · enviamos tudo pelo WhatsApp</p>
+          </div>
+          <button onClick={toggleCart} className="w-9 h-9 flex items-center justify-center text-gray-200 hover:text-white bg-white/5 hover:bg-white/10 rounded-full" aria-label="Fechar">
+            ✕
+          </button>
         </div>
+
+        <div className="flex-1 overflow-y-auto space-y-3 mb-5 pr-1">
+          {cartItems.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-200">Sua lista está vazia.</p>
+              <a href="#iphones" onClick={toggleCart} className="inline-block mt-4 text-blue hover:underline text-sm">
+                Ver iPhones
+              </a>
+            </div>
+          ) : (
+            cartItems.map((item) => (
+              <div key={item.id} className="flex gap-4 p-3 bg-white/[0.04] rounded-2xl border border-white/5">
+                <div className="w-12 h-16 flex items-center justify-center flex-shrink-0">
+                  <PhoneArt design={item.design} color={item.body} title={item.model} className="h-16 w-auto" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-semibold text-white truncate">{item.model} {item.storage}</h4>
+                  <p className="text-sm text-gray-200">{formatMoney(item.price)}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => changeQty(item.id, -1)} className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-sm" aria-label="Diminuir quantidade">−</button>
+                      <span className="w-5 text-center text-sm font-semibold">{item.qty}</span>
+                      <button onClick={() => changeQty(item.id, 1)} className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-sm" aria-label="Aumentar quantidade">+</button>
+                    </div>
+                    <button onClick={() => removeFromCart(item.id)} className="text-xs text-red-400 hover:text-red-300">Remover</button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {cartItems.length > 0 && (
+          <div className="space-y-3 pt-4 border-t border-white/10">
+            <div>
+              <label htmlFor="cart-name" className="text-xs text-gray-200 font-semibold ml-1">Seu nome</label>
+              <input
+                id="cart-name"
+                type="text"
+                value={customerName}
+                onChange={(e) => {
+                  setCustomerName(e.target.value);
+                  setNameError(false);
+                }}
+                autoComplete="name"
+                className={`w-full bg-black/50 border ${nameError ? 'border-red-500' : 'border-white/10'} rounded-xl p-3 text-white focus:border-blue outline-none mt-1 text-sm`}
+                placeholder="Para identificarmos seu pedido"
+              />
+              {nameError && <p className="text-red-400 text-xs mt-1 ml-1">Digite seu nome para continuar.</p>}
+            </div>
+
+            <div>
+              <label htmlFor="cart-payment" className="text-xs text-gray-200 font-semibold ml-1">Forma de pagamento</label>
+              <select
+                id="cart-payment"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white focus:border-blue outline-none mt-1 text-sm cursor-pointer"
+              >
+                {paymentOptions.map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-between items-baseline py-2">
+              <span className="text-gray-200 text-sm">Total</span>
+              <span className="text-2xl font-semibold text-white">{formatMoney(total)}</span>
+            </div>
+
+            <button
+              onClick={handleCheckout}
+              className="w-full bg-[#25D366] hover:bg-[#1ebe5b] text-white font-semibold py-4 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              <WhatsAppIcon size={18} /> Enviar pedido no WhatsApp
+            </button>
+            <p className="text-[11px] text-center text-gray-100">
+              Sem pagamento no site. Um consultor confirma cor, disponibilidade e condições.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

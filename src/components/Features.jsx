@@ -1,131 +1,61 @@
-import { useGSAP } from '@gsap/react'
-import React, { useRef } from 'react'
-import { animateWithGsap } from '../utils/animations';
-import { explore1Img, explore2Img, exploreVideo } from '../utils';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { benefits, store, whatsappLink } from '../constants';
+import { BenefitIcon, WhatsAppIcon } from './Icons';
 
 const Features = () => {
-  const videoRef = useRef();
-
   useGSAP(() => {
-    // Animação do Vídeo Principal
-    gsap.to('#exploreVideo', {
-      scrollTrigger: {
-        trigger: '#exploreVideo',
-        toggleActions: 'play pause reverse restart',
-        start: '-10% bottom',
-      },
-      onComplete: () => {
-        if(videoRef.current) {
-          videoRef.current.play();
-        }
-      }
-    })
-
-    // Títulos
-    animateWithGsap('#features_title', { y: 0, opacity: 1 })
-    
-    // Imagens com efeito de zoom (Parallax feel)
-    animateWithGsap(
-      '.g_grow',
-      { scale: 1, opacity: 1, ease: 'power1' },
-      { scrub: 5.5 }
+    gsap.fromTo(
+      '.benefit-card',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power2.out', scrollTrigger: { trigger: '#vantagens', start: 'top 75%' } }
     );
-    
-    // Textos explicativos
-    animateWithGsap(
-      '.g_text',
-      { y: 0, opacity: 1, ease: 'power2.inOut', duration: 1 }
-    )
   }, []);
 
   return (
-    <section className="h-full common-padding bg-zinc relative overflow-hidden">
-      {/* CORREÇÃO 1: Typo corrigido de 'wdith' para 'width' */}
+    <section id="vantagens" className="common-padding bg-zinc scroll-mt-16">
       <div className="screen-max-width">
-        
-        <div className="mb-12 w-full">
-          {/* SEO: Mudança de h1 para h2 para manter hierarquia correta */}
-          <h2 id="features_title" className="section-heading">Qualidade Garantida.</h2>
-        </div>
-        
-        <div className="flex flex-col justify-center items-center overflow-hidden">
-          {/* MOBILE: Padding ajustado (pl-5 em mobile, pl-24 em desktop) */}
-          <div className="mt-32 mb-24 px-5 md:pl-24 w-full">
-            <h3 className="text-5xl lg:text-7xl font-semibold">PS IPHONES.</h3>
-            <h3 className="text-5xl lg:text-7xl font-semibold">Confiança em 1º lugar.</h3>
-          </div>
+        <p className="text-sm font-semibold text-blue">Vantagens</p>
+        <h2 className="mt-2 text-4xl md:text-6xl font-semibold tracking-tight max-w-3xl">
+          Comprar seu iPhone novo
+          <span className="text-gray"> nunca foi tão tranquilo.</span>
+        </h2>
 
-          <div className="flex-center flex-col sm:px-10">
-            <div className="relative h-[50vh] w-full flex items-center">
-              <video 
-                playsInline 
-                id="exploreVideo" 
-                className="w-full h-full object-cover object-center rounded-lg shadow-2xl" 
-                preload="none" 
-                muted 
-                autoPlay 
-                ref={videoRef}
-              >
-                <source src={exploreVideo} type="video/mp4" />
-              </video>
-            </div>
-
-            <div className="flex flex-col w-full relative">
-              <div className="feature-video-container">
-                <div className="overflow-hidden flex-1 h-[50vh] rounded-lg">
-                  {/* SEO: Alt Text descritivo */}
-                  <img src={explore1Img} alt="Detalhe do acabamento premium do iPhone" loading="lazy" className="feature-video g_grow" />
-                </div>
-                <div className="overflow-hidden flex-1 h-[50vh] rounded-lg">
-                  {/* SEO: Alt Text descritivo */}
-                  <img src={explore2Img} alt="Câmeras de alta performance do iPhone" loading="lazy" className="feature-video g_grow" />
-                </div>
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {benefits.map((b) => (
+            <div key={b.title} className="benefit-card rounded-3xl bg-[#161617] border border-white/[0.06] p-7">
+              <div className="w-12 h-12 rounded-2xl bg-blue/10 text-blue flex items-center justify-center">
+                <BenefitIcon name={b.icon} />
               </div>
-
-              <div className="feature-text-container">
-                <div className="flex-1 flex-center">
-                  <p className="feature-text g_text">
-                    Na PS IPHONES, cada aparelho passa por uma rigorosa inspeção de qualidade. {' '}
-                    <span className="text-white">
-                      Garantimos a procedência e o funcionamento perfeito
-                    </span>,
-                    para que você tenha a melhor experiência Apple sem preocupações.
-                  </p>
-                </div>
-
-                <div className="flex-1 flex-center flex-col items-start">
-                  <p className="feature-text g_text mb-6">
-                    Oferecemos as melhores condições de troca e parcelamento do mercado. {' '}
-                    <span className="text-white">
-                      Seu iPhone novo está mais perto do que você imagina.
-                    </span>
-                    Venha conferir nosso estoque e se surpreender.
-                  </p>
-
-                  {/* FUNIL DE VENDAS: Botão CTA adicionado */}
-                  <div className="g_text opacity-0 translate-y-10">
-                    <a 
-                      href="https://wa.me/5577999828813?text=Ol%C3%A1%20vi%20a%20garantia%20de%20voc%C3%AAs%20no%20site%20e%20fiquei%20interessado!"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-8 py-3 bg-blue hover:bg-white hover:text-black text-white rounded-full font-semibold transition-all duration-300 shadow-[0_0_15px_rgba(41,151,255,0.5)]"
-                    >
-                      Quero meu iPhone com Garantia
-                    </a>
-                  </div>
-                </div>
-
-              </div>
+              <h3 className="mt-5 text-xl font-semibold text-white">{b.title}</h3>
+              <p className="mt-2 text-sm text-gray-200 leading-relaxed">{b.text}</p>
             </div>
-          </div>
+          ))}
         </div>
+
+        <div className="mt-5 rounded-3xl p-8 md:p-12 bg-gradient-to-br from-[#1c2a44] via-[#151b28] to-[#161617] border border-white/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <h3 className="text-2xl md:text-4xl font-semibold text-white">Troque seu iPhone usado.</h3>
+            <p className="mt-2 text-gray-200 max-w-xl">
+              Mande o modelo, a capacidade e o estado do seu aparelho. A gente avalia e o valor vira entrada no seu iPhone novo.
+            </p>
+          </div>
+          <a
+            href={whatsappLink('Olá! Quero avaliar meu iPhone usado para dar de entrada em um novo.')}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary shrink-0"
+          >
+            <WhatsAppIcon size={16} /> Avaliar meu usado
+          </a>
+        </div>
+
+        <p className="mt-6 text-xs text-gray-100">
+          {store.name} · realizando sonhos desde {store.since}.
+        </p>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Features
+export default Features;
