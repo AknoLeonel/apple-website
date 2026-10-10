@@ -1,72 +1,110 @@
-import { useContext } from 'react'; // Importar hook
-import { ShopContext } from '../context/ShopContext'; // Importar nosso contexto
-
-import { bagImg, searchImg, pslogoImg } from '../utils';
-import { navLists } from '../constants';
+import { useContext, useEffect, useState } from 'react';
+import { ShopContext } from '../context/ShopContext';
+import { pslogoImg } from '../utils';
+import { navLists, store } from '../constants';
+import { BagIcon } from './Icons';
 
 const Navbar = () => {
-  // Acessar os dados do ShopContext (Adicionado setView para o botão Admin)
-  const { location, setLocation, cart, toggleCart, setView } = useContext(ShopContext);
+  const { location, setLocation, cart, toggleCart } = useContext(ShopContext);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // Calcular total de itens
   const cartCount = cart.reduce((total, item) => total + item.qty, 0);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const storeSelect = (
+    <label className="flex items-center bg-white/10 rounded-full px-3 py-1.5 border border-white/10">
+      <span className="text-[11px] text-gray-200 mr-2">Loja</span>
+      <select
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        className="bg-transparent text-white text-xs font-semibold outline-none cursor-pointer"
+        aria-label="Escolher loja"
+      >
+        {store.locations.map((l) => (
+          <option key={l.id} value={l.id} className="bg-black text-white">
+            {l.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+
   return (
-    <header className="w-full py-5 sm:px-10 px-5 flex justify-between items-center fixed top-0 left-0 z-50 bg-black/70 backdrop-blur-md transition-all duration-300 border-b border-white/5">
-      <nav className="flex w-full screen-max-width items-center">
-        
-        <a href="#" className="cursor-pointer hover:opacity-80 transition-opacity flex items-center">
-             <img src={pslogoImg} alt="Logo" width={90} className="object-contain" />
+    <header
+      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 border-b ${
+        scrolled || menuOpen ? 'bg-black/80 backdrop-blur-xl border-white/10' : 'bg-transparent border-transparent'
+      }`}
+    >
+      <nav className="screen-max-width flex items-center h-16 px-5 sm:px-10" aria-label="Principal">
+        <a href="#inicio" className="flex items-center hover:opacity-80 transition-opacity" aria-label="PS IPHONES - início">
+          <img src={pslogoImg} alt="PS IPHONES" width={84} height={50} className="object-contain h-10 w-auto" />
         </a>
 
-        {/* --- NOVO: Seletor de Cidade --- */}
-        <div className="hidden md:flex ml-8 items-center bg-white/10 rounded-full px-3 py-1 border border-white/10">
-            <span className="text-xs text-gray-400 mr-2">LOJA:</span>
-            <select 
-                value={location} 
-                onChange={(e) => setLocation(e.target.value)}
-                className="bg-transparent text-white text-xs font-bold uppercase outline-none cursor-pointer"
-            >
-                <option value="barreiras" className="bg-black text-white">Barreiras</option>
-                <option value="formosa" className="bg-black text-white">Formosa</option>
-            </select>
-        </div>
+        <div className="hidden md:block ml-6">{storeSelect}</div>
 
-        <div className="flex flex-1 justify-center max-sm:hidden">
+        <div className="flex flex-1 justify-center max-md:hidden">
           {navLists.map((nav) => (
-            <a key={nav} href="#" className="px-5 text-sm cursor-pointer text-gray hover:text-white transition-colors duration-300 font-medium tracking-wide">
-              {nav}
+            <a
+              key={nav.href}
+              href={nav.href}
+              className="px-4 text-sm text-gray-200 hover:text-white transition-colors"
+            >
+              {nav.label}
             </a>
           ))}
         </div>
 
-        <div className="flex items-baseline gap-7 max-sm:justify-end max-sm:flex-1">
-          <img src={searchImg} alt="search" width={18} height={18} className="cursor-pointer hover:opacity-80" />
-          
-          {/* --- NOVO: Ícone da Sacola Funcional --- */}
-          <div onClick={toggleCart} className="relative cursor-pointer hover:opacity-80 transition-transform active:scale-95 group">
-            <img src={bagImg} alt="bag" width={18} height={18} />
-            {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                </span>
-            )}
-          </div>
-
-          {/* --- NOVO: BOTÃO ADMIN (ESCUDO) --- */}
-          {/* Clique aqui para entrar no painel de controle */}
-          <button 
-            onClick={() => setView('admin')}
-            className="text-gray-500 hover:text-white transition-colors p-1"
-            title="Acesso Administrativo"
+        <div className="flex items-center gap-2 max-md:ml-auto">
+          <button
+            onClick={toggleCart}
+            className="relative p-2 rounded-full hover:bg-white/10 transition"
+            aria-label={`Abrir minha lista (${cartCount} ${cartCount === 1 ? 'item' : 'itens'})`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <BagIcon />
+            {cartCount > 0 && (
+              <span className="absolute top-0 right-0 bg-blue text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </button>
 
+          <button
+            className="md:hidden p-2 rounded-full hover:bg-white/10 transition"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={menuOpen}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              {menuOpen ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 8h16M4 16h16" />}
+            </svg>
+          </button>
         </div>
       </nav>
-    </header>
-  )
-}
 
-export default Navbar
+      {menuOpen && (
+        <div className="md:hidden px-5 pb-6 pt-2 flex flex-col gap-1 animate-fade-in">
+          {navLists.map((nav) => (
+            <a
+              key={nav.href}
+              href={nav.href}
+              onClick={() => setMenuOpen(false)}
+              className="py-3 text-2xl font-semibold text-gray-100 hover:text-white border-b border-white/5"
+            >
+              {nav.label}
+            </a>
+          ))}
+          <div className="pt-4">{storeSelect}</div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Navbar;

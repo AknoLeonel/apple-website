@@ -1,11 +1,8 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/all";
 import { useEffect, useRef, useState } from "react";
 import { hightlightsSlides } from "../constants";
 import { pauseImg, playImg, replayImg } from "../utils";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const VideoCarousel = () => {
   const videoRef = useRef([]);
@@ -109,15 +106,20 @@ const VideoCarousel = () => {
 
       if (isPlaying) {
         gsap.ticker.add(animUpdate);
-      } else {
-        gsap.ticker.remove(animUpdate);
       }
+
+      // Remove o listener ao trocar de vídeo (antes ficava acumulando a cada slide)
+      return () => {
+        gsap.ticker.remove(animUpdate);
+        anim.kill();
+      };
     }
-  }, [videoId, startPlay]); // Dependências limpas
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoId, startPlay]);
 
   // Controle de Play/Pause baseado no estado
   useEffect(() => {
-    if (loadedData.length > 3) {
+    if (loadedData.length >= hightlightsSlides.length) {
       if (!isPlaying) {
         videoRef.current[videoId].pause();
       } else {
@@ -160,13 +162,13 @@ const VideoCarousel = () => {
                   id="video-player" // ID único para o trigger
                   playsInline={true}
                   className={`${
-                    list.id === 2 && "translate-x-44"
+                    list.id === 2 ? "translate-x-44" : ""
                   } pointer-events-none object-cover h-full w-full`}
                   preload="auto"
                   muted
                   ref={(el) => (videoRef.current[i] = el)}
                   onEnded={() =>
-                    i !== 3
+                    i !== hightlightsSlides.length - 1
                       ? handleProcess("video-end", i)
                       : handleProcess("video-last")
                   }
@@ -209,21 +211,21 @@ const VideoCarousel = () => {
           ))}
         </div>
 
-        <button 
-            className="control-btn ml-4 p-4 bg-gray-300 rounded-full hover:bg-white transition-colors duration-300"
-            aria-label={isLastVideo ? "Replay" : isPlaying ? "Pause" : "Play"}
+        <button
+          className="control-btn"
+          aria-label={isLastVideo ? "Repetir" : isPlaying ? "Pausar" : "Reproduzir"}
+          onClick={
+            isLastVideo
+              ? () => handleProcess("video-reset")
+              : !isPlaying
+              ? () => handleProcess("play")
+              : () => handleProcess("pause")
+          }
         >
           <img
             src={isLastVideo ? replayImg : !isPlaying ? playImg : pauseImg}
-            alt={isLastVideo ? "replay" : !isPlaying ? "play" : "pause"}
+            alt=""
             className="w-5 h-5"
-            onClick={
-              isLastVideo
-                ? () => handleProcess("video-reset")
-                : !isPlaying
-                ? () => handleProcess("play")
-                : () => handleProcess("pause")
-            }
           />
         </button>
       </div>

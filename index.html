@@ -2,49 +2,69 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/assets/images/apple.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <title>PS IPHONES | Loja de Celulares e Eletrônicos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href="https://www.psiphones.com.br/" />
 
-    <meta name="description" content="Encontre seu iPhone, Xiaomi, Realme ou Samsung novo na PS IPHONES. Parcelamos em até 12x no cartão. Loja física na Avenida Formosa 1876, Centro. Qualidade e confiança desde 2022." />
-    <meta name="keywords" content="iPhone, Xiaomi, Realme, Samsung, Celulares, Eletrônicos, Loja de Celular, Venda de iPhone, PS IPHONES, Avenida Formosa" />
+    <title>PS IPHONES | iPhone 18 Pro Max, 17 Pro e mais, lacrados em até 18x</title>
+
+    <meta name="description" content="iPhones novos e lacrados com garantia Apple: iPhone 18 Pro Max, 17 Pro Max, 17 Pro, 17, 16, 15 e 14. Parcele em até 18x no cartão ou pague no Pix. Lojas em Barreiras e Formosa." />
+    <meta name="keywords" content="iPhone 18 Pro Max, iPhone 17 Pro Max, iPhone 17 Pro, iPhone 17, iPhone 16, iPhone 15, iPhone 14, iPhone lacrado, comprar iPhone Barreiras, PS IPHONES" />
     <meta name="author" content="PS IPHONES" />
 
-    <meta property="og:type" content="business.business" />
-    <meta property="og:title" content="PS IPHONES | Realizando Sonhos" />
-    <meta property="og:description" content="A melhor loja de eletrônicos da região. iPhones, Xiaomi e Realme em até 12x no cartão. Clique e confira!" />
-    <meta property="og:image" content="/assets/images/hero.jpeg" />
-    
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="PS IPHONES | Loja de Celulares" />
-    <meta property="twitter:description" content="iPhones, Xiaomi e Realme com a melhor condição de pagamento. Venha conferir!" />
-    <meta property="twitter:image" content="/assets/images/hero.jpeg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="PS IPHONES" />
+    <meta property="og:url" content="https://www.psiphones.com.br/" />
+    <meta property="og:title" content="PS IPHONES | iPhones lacrados em até 18x" />
+    <meta property="og:description" content="Do iPhone 14 ao iPhone 18 Pro Max. Novos, lacrados e com garantia Apple. Confira os preços!" />
+    <meta property="og:image" content="https://www.psiphones.com.br/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PS IPHONES | iPhones lacrados em até 18x" />
+    <meta name="twitter:description" content="Do iPhone 14 ao iPhone 18 Pro Max. Novos, lacrados e com garantia Apple." />
+    <meta name="twitter:image" content="https://www.psiphones.com.br/og-image.jpg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "PS IPHONES",
+        "url": "https://www.psiphones.com.br/",
+        "image": "https://www.psiphones.com.br/og-image.jpg",
+        "telephone": "+55-77-99982-8813",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Avenida Formosa 1876, Centro",
+          "addressRegion": "BA",
+          "addressCountry": "BR"
+        },
+        "paymentAccepted": "Pix, Cartão de crédito",
+        "currenciesAccepted": "BRL"
+      }
+    </script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17888906026"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'AW-17888906026');
-    </script>
 
-    <script>
-    function gtag_report_conversion(url) {
-      var callback = function () {
-        if (typeof(url) != 'undefined') {
-          window.location = url;
-        }
-      };
-      gtag('event', 'conversion', {
+      // Registra a conversão do Google Ads sem atrasar nem bloquear a abertura do WhatsApp.
+      function gtag_report_conversion() {
+        gtag('event', 'conversion', {
           'send_to': 'AW-17888906026/BtT5CPK57u0bEKqWjNJC',
           'value': 1.0,
           'currency': 'BRL',
-          'event_callback': callback
-      });
-      return false;
-    }
+          'transport_type': 'beacon'
+        });
+        return true;
+      }
     </script>
 
     <meta name="google-site-verification" content="uL5xVOr53hS8VPBp6_xyClCQKWLX6EmkXNX-AvpT9I8" />
@@ -54,15 +74,12 @@
     <script type="module" src="/src/main.jsx"></script>
 
     <script>
-      document.addEventListener('click', function(event) {
-        // Encontra o link clicado (mesmo se clicar num ícone dentro dele)
-        var link = event.target.closest('a');
-        
-        // Verifica se é um link de WhatsApp
-        if (link && (link.href.includes('api.whatsapp.com') || link.href.includes('wa.me'))) {
-          // Avisa o Google Ads antes de sair do site
-          event.preventDefault(); 
-          gtag_report_conversion(link.href);
+      // Todo clique em link do WhatsApp conta como conversão. O link abre normalmente
+      // (em nova aba), mesmo se o Google Ads estiver bloqueado.
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest && event.target.closest('a');
+        if (link && (link.href.indexOf('api.whatsapp.com') !== -1 || link.href.indexOf('wa.me') !== -1)) {
+          gtag_report_conversion();
         }
       });
     </script>

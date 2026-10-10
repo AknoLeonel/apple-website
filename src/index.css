@@ -18,7 +18,8 @@ html {
 
 body {
   color: white;
-  width: 100dvw;
+  width: 100%;
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
   overflow-x: hidden;
   height: 100%;
   background: #000;
@@ -28,8 +29,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-canvas {
-  touch-action: none;
+::selection {
+  background: rgba(41, 151, 255, 0.4);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 .screen-max-width {
@@ -46,6 +58,22 @@ canvas {
 
   .nav-height {
     @apply h-[calc(100vh-60px)]
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue text-white font-semibold hover:bg-white hover:text-black transition-colors duration-300
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/25 text-white font-semibold hover:bg-white hover:text-black transition-colors duration-300
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-b from-white via-white to-[#8a8a8f] bg-clip-text text-transparent
+  }
+
+  .chip {
+    @apply w-44 h-44 rounded-[28px] flex flex-col items-center justify-center bg-gradient-to-br from-[#2a2a2e] to-[#0e0e10] border border-white/10 shadow-[0_0_80px_rgba(232,116,47,0.25),inset_0_1px_0_rgba(255,255,255,0.08)]
   }
 
   .btn {
@@ -84,10 +112,6 @@ canvas {
     @apply ml-4 p-4 rounded-full bg-gray-300 backdrop-blur flex-center hover:bg-white transition-colors
   }
 
-  .hero-title {
-    @apply text-center font-semibold text-3xl text-gray-100 opacity-0 max-md:mb-10
-  }
-
   .hiw-title {
     @apply text-4xl md:text-7xl font-semibold text-center
   }
@@ -122,15 +146,5 @@ canvas {
 
   .g_fadeIn {
     @apply opacity-0 translate-y-[100px]
-  }
-
-  /* --- UTILITÁRIO GLOBAL PARA ESCONDER SCROLLBAR --- */
-  /* Use className="scrollbar-hide" em qualquer div com scroll */
-  .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-  }
-  .scrollbar-hide {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
   }
 }
