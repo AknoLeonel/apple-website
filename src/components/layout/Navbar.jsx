@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import { ShopContext } from '../context/ShopContext';
-import { pslogoImg } from '../utils';
-import { navLists, store } from '../constants';
-import { BagIcon } from './Icons';
+import { ShopContext } from '../../context/ShopContext';
+import { pslogoImg } from '../../utils/assets';
+import { navLists, store } from '../../config/store';
+import { BagIcon } from '../ui/Icons';
 
 const Navbar = () => {
   const { location, setLocation, cart, toggleCart } = useContext(ShopContext);

@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { frameImg, frameVideo } from '../utils';
-import { animateWithGsap } from '../utils/animations';
-import { whatsappLink } from '../constants';
+import { frameImg, frameVideo } from '../../utils/assets';
+import { animateWithGsap } from '../../utils/animations';
+import { whatsappLink } from '../../config/store';
 
 // Seção de desempenho: destaca o chip A19 Pro da linha iPhone 17 Pro.
-const HowItWorks = () => {
+const Performance = () => {
   const videoRef = useRef();
 
   useGSAP(() => {
@@ -98,4 +98,4 @@ const HowItWorks = () => {
   );
 };
 
-export default HowItWorks;
+export default Performance;

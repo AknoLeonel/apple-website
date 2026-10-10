@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { ShopContext } from '../context/ShopContext';
-import { store, whatsappLink } from '../constants';
-import PhoneArt from './PhoneArt';
-import { WhatsAppIcon } from './Icons';
+import { ShopContext } from '../../context/ShopContext';
+import { store, whatsappLink } from '../../config/store';
+import ProductImage from '../ui/ProductImage';
+import { WhatsAppIcon } from '../ui/Icons';
 
 const paymentOptions = ['Pix (à vista com desconto)', `Cartão de crédito (até ${store.maxInstallments}x)`, 'Entrada + parcelas', 'Usado na troca + diferença'];
 
-const CheckoutModal = () => {
+const CartDrawer = () => {
   const { cart, products, location, isCartOpen, toggleCart, changeQty, removeFromCart, clearCart, formatMoney } = useContext(ShopContext);
   const [customerName, setCustomerName] = useState('');
   const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0]);
@@ -86,7 +86,7 @@ const CheckoutModal = () => {
             cartItems.map((item) => (
               <div key={item.id} className="flex gap-4 p-3 bg-white/[0.04] rounded-2xl border border-white/5">
                 <div className="w-12 h-16 flex items-center justify-center flex-shrink-0">
-                  <PhoneArt design={item.design} color={item.body} title={item.model} className="h-16 w-auto" />
+                  <ProductImage product={item} className="h-16 w-auto" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-semibold text-white truncate">{item.model} {item.storage}</h4>
@@ -159,4 +159,4 @@ const CheckoutModal = () => {
   );
 };
 
-export default CheckoutModal;
+export default CartDrawer;

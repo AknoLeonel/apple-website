@@ -1,7 +1,8 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { benefits, store, whatsappLink } from '../constants';
-import { BenefitIcon, WhatsAppIcon } from './Icons';
+import { store, whatsappLink } from '../../config/store';
+import { benefits } from '../../data/content';
+import { BenefitIcon, WhatsAppIcon } from '../ui/Icons';
 
 const Features = () => {
   useGSAP(() => {

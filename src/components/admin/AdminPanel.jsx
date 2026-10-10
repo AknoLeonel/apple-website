@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import { ShopContext } from '../context/ShopContext';
-import { stockStatus, store } from '../constants';
-import PhoneArt from './PhoneArt';
+import { ShopContext } from '../../context/ShopContext';
+import { store } from '../../config/store';
+import { stockStatus } from '../../data/catalog';
+import ProductImage from '../ui/ProductImage';
 
 const AdminPanel = () => {
   const { products, location, setLocation, getStatus, updatePrice, updateStatus, resetOverrides, formatMoney, logout } = useContext(ShopContext);
@@ -73,7 +74,7 @@ const AdminPanel = () => {
               <tr key={p.id} className="hover:bg-white/5 transition">
                 <td className="p-4 pl-6">
                   <div className="flex items-center gap-3">
-                    <PhoneArt design={p.design} color={p.body} title={p.model} className="h-12 w-auto" />
+                    <ProductImage product={p} className="h-12 w-auto" />
                     <div>
                       <p className="font-semibold">{p.model}</p>
                       <p className="text-xs text-gray-200">{p.storage} · {formatMoney(p.price)}</p>
