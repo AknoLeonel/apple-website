@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { buySteps, faqs, store, whatsappLink } from '../constants';
-import { WhatsAppIcon } from './Icons';
+import { store, whatsappLink } from '../../config/store';
+import { buySteps, faqs } from '../../data/content';
+import { WhatsAppIcon } from '../ui/Icons';
 
 const BuyAndFaq = () => {
   const [open, setOpen] = useState(0);

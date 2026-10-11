@@ -1,8 +1,8 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useEffect, useRef, useState } from "react";
-import { hightlightsSlides } from "../constants";
-import { pauseImg, playImg, replayImg } from "../utils";
+import { highlightSlides } from '../../data/content';
+import { pauseImg, playImg, replayImg } from '../../utils/assets';
 
 const VideoCarousel = () => {
   const videoRef = useRef([]);
@@ -99,7 +99,7 @@ const VideoCarousel = () => {
         if(videoRef.current[videoId]) {
             anim.progress(
             videoRef.current[videoId].currentTime /
-                hightlightsSlides[videoId].videoDuration
+                highlightSlides[videoId].videoDuration
             );
         }
       };
@@ -119,7 +119,7 @@ const VideoCarousel = () => {
 
   // Controle de Play/Pause baseado no estado
   useEffect(() => {
-    if (loadedData.length >= hightlightsSlides.length) {
+    if (loadedData.length >= highlightSlides.length) {
       if (!isPlaying) {
         videoRef.current[videoId].pause();
       } else {
@@ -153,7 +153,7 @@ const VideoCarousel = () => {
   return (
     <>
       <div className="flex items-center">
-        {hightlightsSlides.map((list, i) => (
+        {highlightSlides.map((list, i) => (
           <div key={list.id} className="video-carousel_card sm:pr-20 pr-10">
             <div className="video-carousel_container relative">
               {/* Container do Vídeo com Bordas Arredondadas e Sombra */}
@@ -168,7 +168,7 @@ const VideoCarousel = () => {
                   muted
                   ref={(el) => (videoRef.current[i] = el)}
                   onEnded={() =>
-                    i !== hightlightsSlides.length - 1
+                    i !== highlightSlides.length - 1
                       ? handleProcess("video-end", i)
                       : handleProcess("video-last")
                   }

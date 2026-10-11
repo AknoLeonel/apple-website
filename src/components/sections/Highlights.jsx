@@ -1,7 +1,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { rightImg } from "../utils";
-import { whatsappLink } from "../constants";
+import { rightImg } from '../../utils/assets';
+import { whatsappLink } from '../../config/store';
 import VideoCarousel from './VideoCarousel';
 
 const Highlights = () => {

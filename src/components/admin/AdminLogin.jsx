@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { ShopContext } from '../context/ShopContext';
+import { ShopContext } from '../../context/ShopContext';
 
 const AdminLogin = () => {
   const { adminLogin, setView } = useContext(ShopContext);

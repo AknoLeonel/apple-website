@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { products as catalog, store } from '../constants';
-import { formatMoney } from '../utils';
+import { store } from '../config/store';
+import { products as catalog } from '../data/catalog';
+import { formatMoney } from '../utils/format';
 
 export const ShopContext = createContext();
 

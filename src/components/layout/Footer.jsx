@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { ShopContext } from '../context/ShopContext';
-import { navLists, store, whatsappLink } from '../constants';
-import { pslogoImg } from '../utils';
-import { WhatsAppIcon } from './Icons';
+import { ShopContext } from '../../context/ShopContext';
+import { navLists, store, whatsappLink } from '../../config/store';
+import { pslogoImg } from '../../utils/assets';
+import { WhatsAppIcon } from '../ui/Icons';
 
 const Footer = () => {
   const { setView } = useContext(ShopContext);

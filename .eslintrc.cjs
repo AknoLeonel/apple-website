@@ -19,4 +19,11 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  overrides: [
+    {
+      // Propriedades do react-three-fiber (position, args, metalness...) não são props de DOM
+      files: ['src/components/three/**/*.jsx', 'tools/**/*.jsx'],
+      rules: { 'react/no-unknown-property': 'off' },
+    },
+  ],
 }

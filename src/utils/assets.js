@@ -27,6 +27,3 @@ export const playImg = play;
 export const pauseImg = pause;
 
 export const frameImg = frame;
-
-export const formatMoney = (value) =>
-  value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
